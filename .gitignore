@@ -1,0 +1,53 @@
+# Python
+__pycache__/
+*.pyc
+
+# Virtual Environment
+venv/
+env/
+
+# Byte-compiled
+*.pyo
+*.pyd
+
+# VSCode
+.vscode/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Cache
+*.cache/
+
+# Large model/weights
+*.pth
+*.pt
+*.h5
+
+# Videos / Media
+*.mp4
+*.avi
+*.mov
+*.mkv
+*.wav
+*.mp3
+
+# Uploads & temp
+uploads/
+static/uploads/
+results/
+temp/
+*.png
+
+# Streamlit cache
+.streamlit/
+
+# Flask instance folder
+instance/
+
+# Environment variables
+.env
