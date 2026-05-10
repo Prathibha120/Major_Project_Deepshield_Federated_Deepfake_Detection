@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ title }}</title>
+    <style>
+        /* === Body & Background === */
+        body {
+            background-image: url('/static/background.png');
+            background-color: #0A192F; /* Dark Blue */
+            color: #FFFFFF; /* White text */
+            text-align: center;
+            font-family: Arial, sans-serif;
+            animation: fadeIn 0.8s ease-in-out;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* === Headings & Paragraphs === */
+        h1, h2, h3, h4, h5, h6, p {
+            color: #FFFFFF; /* White text */
+        }
+
+        /* === Buttons & Highlights === */
+        .btn {
+            display: inline-block;
+            margin: 10px;
+            padding: 12px 25px;
+            background-color: #00E5FF; /* Cyan */
+            color: #0A192F; /* Dark text for contrast */
+            text-decoration: none;
+            border-radius: 8px;
+            border: 1px solid #00E5FF;
+            transition: all 0.3s ease-in-out;
+            cursor: pointer;
+        }
+        .btn:hover {
+            background-color: #00B8CC; /* Slightly darker Cyan on hover */
+            border-color: #00B8CC;
+        }
+
+        /* === File Upload Section === */
+        .file-upload {
+            margin: 20px 0;
+        }
+
+        /* === Result Styling === */
+        .result-fake {
+            color: #FF5252; /* Red */
+            font-weight: bold;
+        }
+        .result-authentic {
+            color: #4CAF50; /* Green */
+            font-weight: bold;
+        }
+
+        /* === Cards / Sections / Borders === */
+        .card, .input-field, .section-subtle {
+            background-color: #EAEAEA; /* Gray */
+            border: 1px solid #EAEAEA;
+            color: #0A192F;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px auto;
+            max-width: 600px;
+        }
+
+        /* === Fade-in Animation === */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Optional: Navbar Example */
+        .navbar {
+            background-color: #0A192F; /* Dark Blue */
+            color: #FFFFFF;
+            padding: 15px;
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+    {% block content %}{% endblock %}
+</body>
+</html>
