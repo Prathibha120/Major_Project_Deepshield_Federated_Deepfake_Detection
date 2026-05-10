@@ -1,0 +1,154 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="video-container">
+    <h2>🎥 Deepfake Video Detection</h2>
+    <img src="/static/vii.png" width="300">
+    <form method="post" enctype="multipart/form-data" class="file-upload" onsubmit="showProcessingMessage()">
+        <label for="video_file">Select a video file:</label><br><br>
+        <input type="file" name="video_file" id="video_file" accept="video/*" required>
+        <br><br>
+        <input class="btn" type="submit" value="Upload & Analyze">
+    </form>
+
+    <div id="processing-message" class="processing-message">⏳ Please wait... Processing video frames.</div>
+    <hr>
+
+    {% if prediction %}
+    <div class="result-card">
+        <h3>Result: <span style="color:{{ prediction.color }}">{{ prediction.label }}</span></h3>
+        <p>Average fake probability: <b>{{ prediction.avg }}</b></p>
+
+        <div style="margin:12px 0;">
+            <video src="{{ prediction.video_path }}" width="480" controls></video>
+        </div>
+
+        <button class="btn" onclick="toggleDetails()">📊 View More Details</button>
+    </div>
+    {% endif %}
+
+    {% if details %}
+    <div id="details-section" class="details hidden">
+        <h4>🔎 Most influential frame</h4>
+        {% if details.best_frame_path %}
+            <img src="{{ details.best_frame_path }}" width="360" style="border-radius:8px; display:block; margin:8px auto;">
+            <p style="text-align:center"> Score: {{ details.best_frame_value }}</p>
+        {% else %}
+            <p>No frame saved.</p>
+        {% endif %}
+
+        <h4>📈 Frame-wise probabilities</h4>
+        <div class="graphs-row">
+            <div class="graph-box">
+                <canvas id="lineGraph"></canvas>
+            </div>
+            <div class="graph-box">
+                <canvas id="barGraph"></canvas>
+            </div>
+        </div>
+
+        <!-- <div style="margin-top:12px;">
+            <strong>Static images</strong><br>
+            {% if details.line_graph %}
+                <img src="{{ details.line_graph }}" width="420" style="margin:8px">
+            {% endif %}
+            {% if details.bar_graph %}
+                <img src="{{ details.bar_graph }}" width="420" style="margin:8px">
+            {% endif %}
+        </div> -->
+
+        <div style="margin-top:12px;">
+            {% if details.animation_graph %}
+                <h4>Animation</h4>
+                <img src="{{ details.animation_graph }}" width="640" style="display:block; margin:8px auto;">
+            {% endif %}
+        </div>
+    </div>
+    {% endif %}
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+function showProcessingMessage(){
+    document.getElementById("processing-message").style.display = "block";
+}
+function toggleDetails(){
+    const el = document.getElementById("details-section");
+    if(!el) return;
+    el.classList.toggle("hidden");
+}
+
+/* Use safe default: details.frame_probs may be [] */
+const frameData = {{ details.frame_probs | default([]) | tojson | safe }};
+
+// animated arrays
+let labels = [];
+let animatedData = [];
+let barColors = [];
+
+const lineConfig = {
+    type: 'line',
+    data: {
+        labels: labels,
+        datasets: [{
+            label: 'Fake Probability',
+            data: animatedData,
+            borderColor: '#00E5FF',
+            backgroundColor: 'rgba(0,229,255,0.18)',
+            tension: 0.3,
+            pointRadius: 2,
+            borderWidth: 2
+        }]
+    },
+    options: {
+        animation: false,
+        scales: { y: { min: 0, max: 1 } }
+    }
+};
+
+const barConfig = {
+    type: 'bar',
+    data: {
+        labels: labels,
+        datasets: [{
+            label: 'Fake Probability',
+            data: animatedData,
+            backgroundColor: barColors,
+            borderWidth: 1
+        }]
+    },
+    options: {
+        animation: false,
+        scales: { y: { min: 0, max: 1 } }
+    }
+};
+
+const lineChart = new Chart(document.getElementById('lineGraph'), lineConfig);
+const barChart = new Chart(document.getElementById('barGraph'), barConfig);
+
+let i = 0;
+function animateFrames() {
+    if(i >= frameData.length) return;
+    const p = frameData[i];
+    labels.push(i);
+    animatedData.push(p);
+    barColors.push(p > 0.952 ? '#FF5252' : '#4CAF50');
+    lineChart.update();
+    barChart.update();
+    i++;
+    setTimeout(animateFrames, 120);
+}
+animateFrames();
+</script>
+
+<style>
+.video-container { margin-top: 30px; text-align:center; }
+.result-card { background:#0A192F; color:#fff; padding:16px; border-radius:12px; display:inline-block; }
+.hidden { display:none; }
+.graphs-row { display:flex; gap:18px; justify-content:center; margin-top:12px; }
+.graph-box { width:44%; background:#071226; padding:12px; border-radius:12px; }
+.processing-message { display:none; color:#ddd; margin-top:10px; }
+</style>
+
+{% endblock %}

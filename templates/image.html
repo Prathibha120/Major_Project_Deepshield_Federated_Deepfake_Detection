@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>🖼 Image Deepfake Detection</h2>
+
+<img src="/static/deepfakeimg.png" width="300" >
+
+<form method="post" enctype="multipart/form-data" class="file-upload">
+    <input type="file" name="image_file" accept="image/*" required>
+    <br><br>
+    <input class="btn" type="submit" value="Upload">
+</form>
+
+{% if upload_url %}
+    <div style="margin-top: 20px;">
+        <h4>Uploaded Image:</h4>
+        <img src="{{ upload_url }}" 
+             alt="Uploaded Image"
+             style="max-width: 350px; border-radius: 6px; border: 1px solid #ccc; padding: 4px;">
+    </div>
+{% endif %}
+
+{% if prediction %}
+    <h3>{{ prediction|safe }}</h3>
+{% endif %}
+
+<a class="btn" href="{{ url_for('home') }}">⬅ Back</a>
+{% endblock %}

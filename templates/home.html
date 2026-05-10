@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="home-container">
+    <h1>DeepShield: Federated AI Against Deepfakes</h1>
+    <h3>Choose a detection method:</h3>
+
+    <a class="btn" href="{{ url_for('image_detection') }}">🖼 Image Detection</a>
+    <a class="btn" href="{{ url_for('video_detection') }}">🎥 Video Detection</a>
+</div>
+
+<style>
+    .home-container {
+        margin-top: 100px;
+    }
+
+    h1 {
+        font-size: 2.5em;
+        margin-bottom: 20px;
+        color: #FFFFFF; /* White for headings */
+    }
+
+    h3 {
+        font-size: 1.5em;
+        margin-bottom: 30px;
+        color: #FFFFFF; /* White for subheadings */
+    }
+</style>
+{% endblock %}
